@@ -1,0 +1,113 @@
+:root {
+    --bg_main: #FFFFFF;
+    --text_light: #fff;
+    --text_med: #53627c;
+    --text_dark: #1e2432;
+    --red: #ff1e42;
+    --darkred: #c3112d;
+    --orange: #ff8c00;
+  }
+   
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-weight: normal;
+  }
+   
+  button {
+    cursor: pointer;
+  }
+    
+  input {
+    -webkit-appearance: none;
+  }
+    
+  button,
+  input {
+    border: none;
+    background: none;
+    outline: none;
+    color: inherit;
+  }
+   
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+   
+  ul {
+    list-style: none;
+  }
+   
+  body {
+    font: 1rem/1.3 sans-serif;
+    background: var(--bg_main);
+    color: var(--text_dark);
+  }
+
+.widget{
+    display: flex;
+}
+
+
+  .widget-container{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-content: stretch;
+    align-items: center;
+  }
+
+  .widget-container .city{
+      text-transform: uppercase;
+      font-weight: 300;
+      font-size: 3em;
+  }
+
+  .widget-container .temp{
+    text-transform: uppercase;
+    vertical-align: top;
+    font-size: 10em;
+  }
+
+  .widget-container .temp .degrees{
+    font-weight: bold;
+  }
+
+  .widget-container .temp sup{
+    
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  sub, sup {
+    /* Specified in % so that the sup/sup is the
+       right size relative to the surrounding text */
+    font-size: 65%;
+  
+    /* Zero out the line-height so that it doesn't
+       interfere with the positioning that follows */
+    line-height: 0;
+  
+    /* Where the magic happens: makes all browsers position
+       the sup/sup properly, relative to the surrounding text */
+    position: relative;
+  
+    /* Note that if you're using Eric Meyer's reset.css, this
+       is already set and you can remove this rule */
+    vertical-align: baseline;
+  }
+  
+  sup {
+    /* Move the superscripted text up */
+    top: -0.4em;
+  }
+  
+  sub {
+    /* Move the subscripted text down, but only
+       half as far down as the superscript moved up */
+    bottom: -0.25em;
+  }

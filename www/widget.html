@@ -1,0 +1,165 @@
+<!-- NOTE THIS IS VERY EARLY PROOF OF CONCEPT -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Widgy Weather Widget</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="./assets/html2canvas.min.js"></script>
+        <link rel="stylesheet" href="./assets/style.css">
+    </head>
+    <body>
+        <div id="weather" class="widget"></div>
+        <script>
+            
+            let config = getConfig();
+
+            const widgetStyles = {
+                width: '1093px',
+                height: '510px',
+                backgroundColor: '#000000',
+                color: '#FFFFFF'
+            };
+
+            
+            const outputTarget = "weather";
+
+            let msg = '';
+
+            function getParam(param){
+                let val = new URLSearchParams(window.location.search).get(param);
+                return val ?? null;
+            }
+
+            function output(data){
+
+                const { main, name, sys, weather } = data;
+                const icon = `https://openweathermap.org/img/wn/${
+                weather[0]["icon"]
+                }@2x.png`;
+
+                let weatherOutput = document.getElementById('weather');
+
+                let container = document.createElement('div');
+
+                container.classList.add('widget-container');            
+
+                setElementStyles(container, widgetStyles);
+                
+                let li = document.createElement('div');
+                
+                li.classList.add('city');
+
+
+                let markup = `
+                    <div class="city">${name}</div>
+                    <div class="temp">
+                        <span class="degrees">${Math.round(main.temp)}</span><sup>°</sup>
+                `;
+                
+                li.innerHTML = markup;
+                
+                // Clear the existing data
+                weatherOutput.innerHTML = '';
+
+                container.innerHTML = markup;
+
+                // Add the new weather data
+                weatherOutput.appendChild(container);
+            }
+
+            function getConfig(){
+
+                let zipCode = getParam('zipCode');
+                let countryCode = getParam('countryCode') ?? 'US';
+                let apiKey = getParam('apiKey');
+                let units = getParam('units') ?? 'imperial';
+
+                return {
+                    apiParams:{
+                        zipCode: zipCode,
+                        countryCode: countryCode,
+                        apiKey: apiKey,
+                        units: units
+                    },
+                    unitText: (units == 'imperial') ? 'F' : 'C'
+                }
+            }
+
+            function getWeatherApiUrl(){
+                
+                let conf = getConfig();
+
+                console.log('config', conf);
+
+                if(!conf.apiParams.apiKey || !conf.apiParams.countryCode || !conf.apiParams.zipCode){
+                    let errorMessage = 'Missing required url params (apiKey, countryCode, zipCode)';
+                    alert(errorMessage);
+                    throw new Error(errorMessage);
+                    return;
+                }
+
+                return `https://api.openweathermap.org/data/2.5/weather?zip=${conf.apiParams.zipCode},${conf.apiParams.countryCode}&appid=${conf.apiParams.apiKey}&units=${conf.apiParams.units}`;
+            }
+
+            function getWeatherData(url){
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('data', data);
+                        output(data);
+                        createImage();
+                    })
+                    .catch((e) => {
+                        console.log('catch');
+                        console.error(e);
+                        msg.textContent = "Please search for a valid city";
+                    });
+
+                }
+
+            function run(){
+                let url = getWeatherApiUrl();
+                getWeatherData(url);
+                
+            }
+
+            function setElementStyles(el, styles){
+                for(let prop of Object.keys(styles)){
+                    el.style[prop.toString()] = styles[prop.toString()];
+                }
+            }
+
+            function createImage(){
+
+                html2canvas(document.querySelector('#weather')).then( canvas => {
+                    console.log('canvas', canvas);
+                    let outputDiv = document.createElement('div');
+                    outputDiv.setAttribute('id', 'output');
+
+                    let i = document.createElement('img');
+                    const imageUrl = canvas.toDataURL();
+                    i.src = imageUrl;
+
+                    if(getParam('redirect')){
+                        window.location = imageUrl;
+                    }
+
+                    outputDiv.appendChild(i);
+
+                    document.body.appendChild(outputDiv);
+                })
+
+                document.getElementById('weather').remove();
+
+            }
+
+            run();
+
+
+        </script>
+    </body>
+</html>
