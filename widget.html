@@ -12,11 +12,11 @@
     </head>
     <body>
         <div id="weather" class="widget"></div>
+        <div id="image-data" style="display: none"></div>
+
         <script>
             
             let config = getConfig();
-
-            
 
             const defaultConfig = {
                 design: {
@@ -157,6 +157,9 @@
                     let i = document.createElement('img');
                     const imageUrl = canvas.toDataURL();
                     i.src = imageUrl;
+
+                    let imageDataDiv = document.getElementById('image-data');
+                    imageDataDiv.innerText = imageUrl;
 
                     if(getParam('redirect')){
                         window.location = imageUrl;
