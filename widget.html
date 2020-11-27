@@ -16,11 +16,18 @@
             
             let config = getConfig();
 
+            
+
+            const defaultConfig = {
+                design: {
+                    backgroundColor: '#000000',
+                    textColor: '#FFFFFF'
+                }
+            };
+
             const widgetStyles = {
                 width: '1093px',
                 height: '510px',
-                backgroundColor: '#000000',
-                color: '#FFFFFF'
             };
 
             
@@ -31,6 +38,13 @@
             function getParam(param){
                 let val = new URLSearchParams(window.location.search).get(param);
                 return val ?? null;
+            }
+
+            function setCssVariables(){
+                let backgroundColor = getParam('backgroundColor') ?? defaultConfig.design.backgroundColor;
+                let textColor = getParam('textColor') ?? defaultConfig.design.textColor;
+                document.documentElement.style.setProperty('--widget-background-color', backgroundColor);
+                document.documentElement.style.setProperty('--widget-text-color', textColor);
             }
 
             function output(data){
@@ -157,6 +171,10 @@
 
             }
 
+            // Sets the styles
+            setCssVariables();
+
+            // Runs the script
             run();
 
 
